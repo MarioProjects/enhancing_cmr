@@ -1,5 +1,3 @@
-# enhancing_cmr
-
 # Enhancing Cardiac Magnetic Resonance Segmentation using Transfer Learning and Stochastic Weight Averaging Ensembling
 
 This repository is the official implementation of *Enhancing Cardiac Magnetic Resonance Segmentation using Transfer Learning and Stochastic Weight Averaging Ensembling*. 
