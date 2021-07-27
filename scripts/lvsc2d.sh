@@ -1,38 +1,17 @@
 #!/bin/bash
-# Only download the data argument ./tests/segmentation/lvsc2d.sh only_data
-# Check if LVSC data is available, if not download
-if [ ! -d "data/LVSC" ]
-then
-    echo "LVSC data not found at 'data' directory. Downloading..."
-    curl -O -J https://nextcloud.maparla.duckdns.org/s/cRiw9Zdi8JkZJNN/download
-    mkdir -p data
-    tar -zxf lv_lvsc.tar.gz  -C data/
-    rm lv_lvsc.tar.gz
-    echo "Done!"
-    [ "$1" == "only_data" ] && exit
-else
-  echo "LVSC already downloaded!"
-  [ "$1" == "only_data" ] && exit
-fi
-
-for lv_train_patients in 5 10 25
-do
-
-for model in "resnet34_unet_scratch_scse_hypercols" "resnet34_unet_imagenet_encoder_scse_hypercols"
-do
-
-gpu="0,1"
-dataset="LVSC2D"
-problem_type="segmentation"
 
 # Available models:
 #   -> resnet34_unet_scratch - resnet18_unet_scratch
 #   -> small_segmentation_unet - small_segmentation_small_unet
 #      small_segmentation_extrasmall_unet - small_segmentation_nano_unet
 #   -> resnet18_pspnet_unet - resnet34_pspnet_unet
-#model="resnet34_unet_imagenet_encoder"
+model="resnet34_unet_imagenet_encoder"
 
-#lv_train_patients=100
+gpu="0,1"
+dataset="LVSC2D"
+problem_type="segmentation"
+
+lv_train_patients=100
 
 img_size=224
 crop_size=224
@@ -83,7 +62,3 @@ python3 -u evaluate.py --gpu $gpu --dataset $dataset --model_name $model --img_s
 --swa_checkpoint --batch_size $batch_size --normalization $normalization --output_dir "$output_dir" --metrics iou dice \
 --problem_type $problem_type --mask_reshape_method $mask_reshape_method \
 --generated_overlays $generated_overlays --add_depth --model_checkpoint "$model_checkpoint"
-
-done
-
-done

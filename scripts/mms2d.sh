@@ -1,32 +1,6 @@
 #!/bin/bash
 
-# Check if MMs data is available, if not download
-if [ ! -d "data/MMs" ]
-then
-    echo "MMs data not found at 'data' directory. Downloading..."
-    wget -nv --load-cookies /tmp/cookies.txt \
-      "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt \
-      --keep-session-cookies --no-check-certificate \
-      'https://docs.google.com/uc?export=download&id=1g8vqf47A2KKnng1SIj5uxRaPsmrwqtki' \
-      -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1g8vqf47A2KKnng1SIj5uxRaPsmrwqtki" \
-      -O MMs_Oficial.tar.gz && rm -rf /tmp/cookies.txt
-    mkdir -p data
-    tar -zxf MMs_Oficial.tar.gz  -C data/
-    rm MMs_Oficial.tar.gz
-    echo "Done!"
-else
-  echo "MMs data found at 'data' directory!"
-fi
 
-# Only download the data argument ./tests/segmentation/mms2d.sh only_data
-if [[ $1 == "only_data" ]]
-then
-  exit
-fi
-
-gpu="0,1"
-dataset="mms2d"
-problem_type="segmentation"
 
 # Available models:
 #   -> resnet34_unet_scratch - resnet18_unet_scratch
@@ -34,6 +8,10 @@ problem_type="segmentation"
 #      small_segmentation_extrasmall_unet - small_segmentation_nano_unet
 #   -> resnet18_pspnet_unet - resnet34_pspnet_unet
 model="resnet18_unet_scratch_scse_hypercols"
+
+gpu="0,1"
+dataset="mms2d"
+problem_type="segmentation"
 
 img_size=224
 crop_size=224
